@@ -4,7 +4,7 @@ description: directPrint plugin allows Flutter applications
   OpenPrinter/StartDocPrinter system functions,
   mainly intended for POS printers.
 version: 1.0.1
-homepage: https://www.fraktal.hr
+homepage: https://github.com/IgorGZd/directprint
 
 environment:
   sdk: ">=2.17.5 <3.0.0"
