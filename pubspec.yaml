@@ -1,0 +1,28 @@
+name: directprint
+description: directPrint plugin allows Flutter applications
+  to print directly to Windows printers using the
+  OpenPrinter/StartDocPrinter system functions,
+  mainly intended for POS printers.
+version: 1.0.1
+homepage: https://www.fraktal.hr
+
+environment:
+  sdk: ">=2.17.5 <3.0.0"
+  flutter: ">=2.5.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  plugin_platform_interface: ^2.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.1
+
+flutter:
+  plugin:
+    platforms:
+      windows:
+        pluginClass: DirectprintPluginCApi
+
