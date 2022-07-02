@@ -1,6 +1,6 @@
 # directprint
 
-directPrint The plugin allows Flutter applications 
+Directprint The plugin allows Flutter applications 
 to print directly to Windows printers using the
 OpenPrinter/StartDocPrinter system functions,
 mainly for sending codes to POS printers.
