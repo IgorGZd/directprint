@@ -1,6 +1,6 @@
 # directprint
 
-Directprint The plugin allows Flutter applications to print directly to 
+Directprint The plugin allows Flutter applications to print raw to 
 Windows printers using the OpenPrinter/StartDocPrinter system functions,
 mainly for sending raw text and control codes to POS printers.
 
@@ -44,18 +44,22 @@ The result of the call is a Future String with the following content:
 ```dart
     import 'package:directprint/directprint.dart';
     
-    // ...
-    final _directprintPlugin = Directprint();
-
-    // ...
-    String data = "Direct print plugin test ...\n\n\n\n";
-    Uint8List enctxt = Uint8List.fromList(data.codeUnits);
-    
-    String printer = 'unknown';
-    String job = 'Invoice';
-    
-    String dpResult =
-      await _directprintPlugin.print(printer, job, enctxt) ?? '';
+    Future doPrint() async {
+       // ...
+       final _directprintPlugin = Directprint();
+   
+       // ...
+       String data = "Direct print plugin test ...\n\n\n\n";
+       Uint8List enctxt = Uint8List.fromList(data.codeUnits);
+       
+       String printer = 'unknown';
+       String job = 'Invoice';
+       
+       String dpResult =
+         await _directprintPlugin.print(printer, job, enctxt) ?? '';
+   
+       // ...
+    }
 ```
 
 
