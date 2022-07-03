@@ -16,7 +16,7 @@ abstract class DirectprintPlatform extends PlatformInterface {
   ///
   /// Defaults to [MethodChannelDirectprint].
   static DirectprintPlatform get instance => _instance;
-  
+
   /// Platform-specific implementations should set this with their own
   /// platform-specific class that extends [DirectprintPlatform] when
   /// they register themselves.

@@ -16,7 +16,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   final _directprintPlugin = Directprint();
   String _printStatus = 'Unknown';
   String _printerName = 'Unknown';
@@ -37,7 +36,6 @@ class _MyAppState extends State<MyApp> {
               children: [
                 ElevatedButton(
                     onPressed: () {
-
                       _directPrintText();
                     },
                     child: const Text('directPrint Test')),
@@ -53,7 +51,9 @@ class _MyAppState extends State<MyApp> {
                 Text('Printer: $_printerName'),
                 Text('Job name: $_jobName'),
                 Expanded(child: Container()),
-                Container(child: const Text('Check printer name ...'),)
+                Container(
+                  child: const Text('Check printer name ...'),
+                )
               ],
             ),
           ),
@@ -72,7 +72,6 @@ class _MyAppState extends State<MyApp> {
 
       String printer = 'POS-58';
       String job = 'Invoice';
-
 
       String dpResult =
           await _directprintPlugin.print(printer, job, enctxt) ?? '';

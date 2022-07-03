@@ -6,12 +6,12 @@ import 'package:directprint/directprint_platform_interface.dart';
 import 'package:directprint/directprint_method_channel.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-class MockDirectprintPlatform 
+class MockDirectprintPlatform
     with MockPlatformInterfaceMixin
     implements DirectprintPlatform {
-
   @override
-  Future<String?> print(String printer, String job, Uint8List data) => Future.value('OK');
+  Future<String?> print(String printer, String job, Uint8List data) =>
+      Future.value('OK');
 }
 
 void main() {
@@ -26,6 +26,9 @@ void main() {
     MockDirectprintPlatform fakePlatform = MockDirectprintPlatform();
     DirectprintPlatform.instance = fakePlatform;
 
-    expect(await directprintPlugin.print('printer', 'job', Uint8List.fromList('data'.codeUnits)), 'OK');
+    expect(
+        await directprintPlugin.print(
+            'printer', 'job', Uint8List.fromList('data'.codeUnits)),
+        'OK');
   });
 }

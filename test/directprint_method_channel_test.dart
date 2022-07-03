@@ -20,8 +20,11 @@ void main() {
     channel.setMockMethodCallHandler(null);
   });
 
-
   test('directPrint', () async {
-    expect(await platform.print('printer', 'job', Uint8List.fromList('data'.codeUnits)) ?? '', 'OK');
+    expect(
+        await platform.print(
+                'printer', 'job', Uint8List.fromList('data'.codeUnits)) ??
+            '',
+        'OK');
   });
 }
