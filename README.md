@@ -16,7 +16,7 @@ with the help of the "print" method.
 ```
 Call the "print" method with arguments:
 
-    String printer - Sistem printr nae 
+    String printer - Sistem printer name 
     String job - Specifying job name in print queue
     Uint8List data - raw data bytes
 
@@ -52,7 +52,7 @@ The result of the call is a Future String with the following content:
        String data = "Direct print plugin test ...\n\n\n\n";
        Uint8List enctxt = Uint8List.fromList(data.codeUnits);
        
-       String printer = 'unknown';
+       String printer = 'POS-58';
        String job = 'Invoice';
        
        String dpResult =
