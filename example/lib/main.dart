@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
 
 import 'package:directprint/directprint.dart';
 import 'package:flutter/material.dart';

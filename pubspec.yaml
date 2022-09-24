@@ -1,7 +1,7 @@
 name: directprint
 description: Directprint The plugin allows Flutter applications to
   send raw text and control codes to POS printer on Windows platfom
-version: 1.0.2
+version: 1.0.3
 homepage: https://github.com/IgorGZd/directprint
 
 environment:
@@ -11,7 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  plugin_platform_interface: ^2.1.2
+  plugin_platform_interface: ^2.1.3
 
 dev_dependencies:
   flutter_test:
