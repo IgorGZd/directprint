@@ -4,7 +4,7 @@ Directprint The plugin allows Flutter applications to raw print to
 Windows printers using the OpenPrinter/StartDocPrinter system functions,
 mainly for sending raw text and control codes to POS printers.
 
-The plugin is intended for the Windows platform.
+The plugin is intended for the Windows platform only.
 
 ## Getting Started
 
