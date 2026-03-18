@@ -62,6 +62,68 @@ The result of the call is a Future String with the following content:
     }
 ```
 
+---
 
+## GitHub Copilot API
 
+The package also provides `GitHubCopilotClient`, a Dart client for interacting
+with the [GitHub Copilot](https://github.com/features/copilot) chat completions
+API. This lets you use GitHub Copilot as an AI backend directly from your Dart
+or Flutter application.
 
+### Prerequisites
+
+You need a GitHub personal access token (classic) or fine-grained token that
+has access to GitHub Copilot.
+
+### Classes
+
+| Class | Description |
+|---|---|
+| `GitHubCopilotClient` | The main client. Handles token exchange and chat requests. |
+| `CopilotMessage` | A single message with a `role` (`'system'`, `'user'`, or `'assistant'`) and `content`. |
+| `CopilotResponse` | The API response, containing a list of `CopilotChoice` objects. |
+| `CopilotChoice` | One completion choice with the model's reply `message` and `finishReason`. |
+| `GitHubCopilotException` | Thrown when an API call fails, carrying an optional HTTP `statusCode`. |
+
+### Usage
+
+```dart
+import 'package:directprint/directprint.dart';
+
+Future<void> askCopilot() async {
+  final client = GitHubCopilotClient(githubToken: 'ghp_yourGitHubToken');
+
+  try {
+    final response = await client.chat([
+      const CopilotMessage(role: 'system', content: 'You are a helpful assistant.'),
+      const CopilotMessage(role: 'user',   content: 'How do I print raw bytes on Windows?'),
+    ]);
+
+    print(response.choices.first.message.content);
+  } on GitHubCopilotException catch (e) {
+    print('Copilot error: $e');
+  } finally {
+    client.close();
+  }
+}
+```
+
+You can also specify the model:
+
+```dart
+final response = await client.chat(
+  messages,
+  model: 'gpt-3.5-turbo',
+);
+```
+
+### How it works
+
+1. `GitHubCopilotClient` exchanges your GitHub personal access token for a
+   short-lived Copilot API token by calling
+   `GET https://api.github.com/copilot_internal/v2/token`.
+2. It then calls
+   `POST https://api.githubcopilot.com/chat/completions`
+   with an OpenAI-compatible request body.
+3. The JSON response is deserialized into a `CopilotResponse` object.
