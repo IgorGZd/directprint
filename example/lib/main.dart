@@ -20,6 +20,24 @@ class _MyAppState extends State<MyApp> {
   String _printStatus = 'Unknown';
   String _printerName = 'Unknown';
   String _jobName = 'Unknown';
+  List<String> _availablePrinters = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPrinters();
+  }
+
+  Future<void> _loadPrinters() async {
+    try {
+      final printers = await _directprintPlugin.getPrinters();
+      setState(() {
+        _availablePrinters = printers;
+      });
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,10 +64,20 @@ class _MyAppState extends State<MyApp> {
                     },
                     child: const Text('directPrint Test with error')),
                 const SizedBox(height: 10),
+                ElevatedButton(
+                    onPressed: _loadPrinters,
+                    child: const Text('Refresh printer list')),
+                const SizedBox(height: 10),
                 Text('Print status: $_printStatus'),
                 const SizedBox(height: 10),
                 Text('Printer: $_printerName'),
                 Text('Job name: $_jobName'),
+                const SizedBox(height: 10),
+                const Text('Available printers:',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                ..._availablePrinters.map((p) => Text(p)),
+                if (_availablePrinters.isEmpty)
+                  const Text('No printers found'),
                 Expanded(child: Container()),
                 Container(
                   child: const Text('Check printer name ...'),
