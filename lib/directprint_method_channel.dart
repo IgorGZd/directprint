@@ -14,4 +14,11 @@ class MethodChannelDirectprint extends DirectprintPlatform {
         'directPrint', {'printer': printer, 'job': job, 'data': data});
     return version;
   }
+
+  @override
+  Future<List<String>> getPrinters() async {
+    final List<dynamic>? result =
+        await methodChannel.invokeMethod<List<dynamic>>('getPrinters');
+    return result?.cast<String>() ?? [];
+  }
 }

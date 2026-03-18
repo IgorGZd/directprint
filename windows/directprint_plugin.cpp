@@ -2,6 +2,7 @@
 
 // This must be included before many other Windows headers.
 #include <windows.h>
+#include <winspool.h>
 
 #include <flutter/method_channel.h>
 #include <flutter/plugin_registrar_windows.h>
@@ -38,6 +39,53 @@ namespace directprint {
     DirectprintPlugin::DirectprintPlugin() {}
 
     DirectprintPlugin::~DirectprintPlugin() {}
+
+    // Converts a UTF-8 encoded std::string to std::wstring using the Windows API.
+    // The naive std::wstring(str.begin(), str.end()) conversion corrupts multi-byte
+    // UTF-8 characters (e.g. Turkish, Croatian, Chinese printer names).
+    std::wstring Utf8ToWideString(const std::string& str) {
+        if (str.empty()) return std::wstring();
+        int size_needed = MultiByteToWideChar(CP_UTF8, 0, str.c_str(),
+                                              static_cast<int>(str.size()), NULL, 0);
+        if (size_needed <= 0) return std::wstring();
+        std::wstring result(size_needed, 0);
+        MultiByteToWideChar(CP_UTF8, 0, str.c_str(),
+                            static_cast<int>(str.size()), &result[0], size_needed);
+        return result;
+    }
+
+    // Converts a null-terminated wide string to a UTF-8 encoded std::string.
+    std::string WideStringToUtf8(LPCWSTR wstr) {
+        if (!wstr || wstr[0] == L'\0') return std::string();
+        int size_needed = WideCharToMultiByte(CP_UTF8, 0, wstr, -1, NULL, 0, NULL, NULL);
+        if (size_needed <= 0) return std::string();
+        std::string result(size_needed - 1, 0);
+        WideCharToMultiByte(CP_UTF8, 0, wstr, -1, &result[0], size_needed, NULL, NULL);
+        return result;
+    }
+
+    // Returns a list of installed printer names (UTF-8 encoded) visible to the
+    // current user (local printers and network connections).
+    std::vector<std::string> GetAvailablePrinters() {
+        std::vector<std::string> printers;
+        DWORD dwNeeded = 0, dwReturned = 0;
+
+        EnumPrintersW(PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS,
+                      NULL, 2, NULL, 0, &dwNeeded, &dwReturned);
+        if (dwNeeded == 0) return printers;
+
+        std::vector<BYTE> buffer(dwNeeded);
+        if (EnumPrintersW(PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS,
+                          NULL, 2, buffer.data(), dwNeeded, &dwNeeded, &dwReturned)) {
+            auto* pInfo = reinterpret_cast<PRINTER_INFO_2W*>(buffer.data());
+            for (DWORD i = 0; i < dwReturned; i++) {
+                if (pInfo[i].pPrinterName) {
+                    printers.push_back(WideStringToUtf8(pInfo[i].pPrinterName));
+                }
+            }
+        }
+        return printers;
+    }
 
     std::string GetUrlArgumentString(const flutter::MethodCall<>& method_call, std::string att) {
       std::string url;
@@ -142,8 +190,8 @@ namespace directprint {
           std::string prnName = GetUrlArgumentString(method_call, "printer");
           std::string jobName = GetUrlArgumentString(method_call, "job");
 
-           std::wstring prnNameWstr = std::wstring(prnName.begin(), prnName.end());
-           std::wstring jobNameWstr = std::wstring(jobName.begin(), jobName.end());
+           std::wstring prnNameWstr = Utf8ToWideString(prnName);
+           std::wstring jobNameWstr = Utf8ToWideString(jobName);
 
           std::vector<BYTE> databytes = GetUrlArgumentBytes(method_call, "data");
           size_t dataLen = databytes.size();
@@ -163,6 +211,13 @@ namespace directprint {
           }
 
           result->Success(flutter::EncodableValue(dpStream.str()));
+      } else if (method_call.method_name().compare("getPrinters") == 0) {
+          std::vector<std::string> printerList = GetAvailablePrinters();
+          flutter::EncodableList encodableList;
+          for (const auto& name : printerList) {
+              encodableList.push_back(flutter::EncodableValue(name));
+          }
+          result->Success(flutter::EncodableValue(encodableList));
       } else {
         result->NotImplemented();
       }

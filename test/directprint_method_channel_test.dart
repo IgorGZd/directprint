@@ -11,6 +11,9 @@ void main() {
 
   setUp(() {
     channel.setMockMethodCallHandler((MethodCall methodCall) async {
+      if (methodCall.method == 'getPrinters') {
+        return ['Printer One', 'Printer Two'];
+      }
       return 'OK';
     });
   });
@@ -25,5 +28,10 @@ void main() {
                 'printer', 'job', Uint8List.fromList('data'.codeUnits)) ??
             '',
         'OK');
+  });
+
+  test('getPrinters', () async {
+    final printers = await platform.getPrinters();
+    expect(printers, ['Printer One', 'Printer Two']);
   });
 }

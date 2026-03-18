@@ -28,4 +28,8 @@ abstract class DirectprintPlatform extends PlatformInterface {
   Future<String?> print(String printer, String job, Uint8List data) {
     throw UnimplementedError('directPrint has not been implemented.');
   }
+
+  Future<List<String>> getPrinters() {
+    throw UnimplementedError('getPrinters has not been implemented.');
+  }
 }

@@ -12,6 +12,10 @@ class MockDirectprintPlatform
   @override
   Future<String?> print(String printer, String job, Uint8List data) =>
       Future.value('OK');
+
+  @override
+  Future<List<String>> getPrinters() =>
+      Future.value(['Printer One', 'Printer Two']);
 }
 
 void main() {
@@ -30,5 +34,14 @@ void main() {
         await directprintPlugin.print(
             'printer', 'job', Uint8List.fromList('data'.codeUnits)),
         'OK');
+  });
+
+  test('getPrinters', () async {
+    Directprint directprintPlugin = Directprint();
+    MockDirectprintPlatform fakePlatform = MockDirectprintPlatform();
+    DirectprintPlatform.instance = fakePlatform;
+
+    final printers = await directprintPlugin.getPrinters();
+    expect(printers, ['Printer One', 'Printer Two']);
   });
 }
