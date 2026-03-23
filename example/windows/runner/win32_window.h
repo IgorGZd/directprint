@@ -41,6 +41,9 @@ class Win32Window {
   // Release OS resources associated with window.
   void Destroy();
 
+  // Show the current window. See Hide for more.
+  void Show();
+
   // Inserts |content| into the window tree.
   void SetChildContent(HWND content);
 

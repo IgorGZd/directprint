@@ -26,6 +26,16 @@ bool FlutterWindow::OnCreate() {
   }
   RegisterPlugins(flutter_controller_->engine());
   SetChildContent(flutter_controller_->view()->GetNativeWindow());
+
+  flutter_controller_->engine()->SetNextFrameCallback([this]() {
+    this->Show();
+  });
+
+  // Flutter can complete the first frame before the "window create" callback
+  // is called. If so, the window is still hidden at this point. Check for
+  // this case and make sure the window is shown.
+  flutter_controller_->ForceRedraw();
+
   return true;
 }
 
